@@ -1,0 +1,40 @@
+html {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+#buttons {
+    padding: 10px;
+    padding-bottom: 30px;
+}
+#slider {
+    width: 300px;
+}
+#timer {
+    font-size: 60px;
+    padding: 20px;
+}
+#canvas {
+    width: auto;
+    height: auto;
+}
+#response {
+    font-size: 48px;
+    padding: 20px;
+}
+
+
+button {
+    width: 120px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 2px #808080 solid;
+    padding: 5px;
+    cursor: pointer;
+}
+#start {
+    width: 200px;
+    background-color: cyan;
+}
+
