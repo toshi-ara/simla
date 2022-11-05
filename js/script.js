@@ -26,7 +26,6 @@ const elem = {};
 
 window.onload = ()=>{
     const canvas = document.getElementById("canvas");
-    const positon = document.getElementById("position");
 
     // set canvas
     const context = canvas.getContext("2d");
