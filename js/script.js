@@ -4,7 +4,7 @@
 
 // object fot timer
 let time = {
-    isPlay:  false,
+    isRunning:  false,
     start:   Date.now(),
     elapsed: 0,
     total:   0
@@ -64,7 +64,7 @@ window.onload = ()=>{
     // process in reload of browser
     // start/restart/pause button
     let label;
-    if (time.isPlay) {
+    if (time.isRunning) {
         label = label_pause;
     } else {
         if (time.total == 0) {
@@ -76,7 +76,7 @@ window.onload = ()=>{
     elem.start.textContent = label;
     elem.newexp.textContent = label_newexp;
     elem.quit.textContent = label_quit;
-    toggleButton(time.isPlay);
+    toggleButton(time.isRunning);
     // slider
     printSpeed(slider.value)
 
@@ -91,7 +91,7 @@ window.onload = ()=>{
 //////////////////////////////////
 
 function clickCanvas(canvas, context, event) {
-    if (!time.isPlay) { return }
+    if (!time.isRunning) { return }
     // running
     const pos = getClickedPosition(canvas, event);
     const site = getCircleNumber(pos, CENTERS, Rnormal);
@@ -132,11 +132,11 @@ function clickCanvas(canvas, context, event) {
 
 // push new experiment button
 function clickNewExp() {
-    if (time.isPlay) { return }
+    if (time.isRunning) { return }
     // in pause
     const check = window.confirm(msg_newexp);
     if (check) {
-        time.isPlay = false;
+        time.isRunning = false;
         time.start = Date.now();
         time.elapsed = 0;
         time.total = 0;
@@ -150,15 +150,15 @@ function clickNewExp() {
 
 // push start/restart/pause button
 function clickStart() {
-    if (!time.isPlay) { // before start / in pause
-        time.isPlay = true;          // running
+    if (!time.isRunning) { // before start / in pause
+        time.isRunning = true;          // running
         time.start = Date.now();
         time.elapsed = 0;
         elem.start.textContent = label_pause;
         toggleButton(true);
     }
     else { // in running
-        time.isPlay = false;         // pause
+        time.isRunning = false;         // pause
         time.total += time.elapsed;
         elem.start.textContent = label_restart;
         toggleButton(false);
@@ -168,7 +168,7 @@ function clickStart() {
 
 // push quit button
 function clickQuit() {
-    if (time.isPlay) { return }
+    if (time.isRunning) { return }
     // in pause
     const check = window.confirm(msg_quit);
     if (check) {
@@ -177,8 +177,8 @@ function clickQuit() {
     }
 }
 
-function toggleButton(isPlay) {
-    if (isPlay) {
+function toggleButton(isRunning) {
+    if (isRunning) {
         elem.newexp.style.color = "gray";
         elem.quit.style.color = "gray";
     } else {
@@ -195,7 +195,7 @@ function toggleButton(isPlay) {
 // change slider
 function sliderChanged() {
     printSpeed(slider.value)
-    if (time.isPlay) {
+    if (time.isRunning) {
         time.total += time.elapsed;
         time.start = Date.now();
         time.elapsed = 0;
@@ -215,7 +215,7 @@ function printSpeed(speed) {
 // display timer
 function displayTimer() {
     let t;
-    if (time.isPlay) {
+    if (time.isRunning) {
         time.elapsed = (Date.now() - time.start) * slider.value;
         t = time.total + time.elapsed;
     } else {
