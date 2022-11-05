@@ -49,7 +49,7 @@ window.onload = ()=>{
     elem.start.addEventListener(clickEventType, clickStart, false);
     elem.quit.addEventListener(clickEventType, clickQuit, false);
     elem.canvas.addEventListener(clickEventType,
-        () => {clickCanvas(canvas, context, event)}, false);
+        (e) => {clickCanvas(canvas, context, e)}, false);
     elem.slider.addEventListener("input", sliderChanged, false);
 
     // restore parameters if data is saved in localStorage
@@ -89,10 +89,10 @@ window.onload = ()=>{
 // mousedown in canvas area
 //////////////////////////////////
 
-function clickCanvas(canvas, context, event) {
+function clickCanvas(canvas, context, e) {
     if (!time.isRunning) { return }
     // running
-    const pos = getClickedPosition(canvas, event);
+    const pos = getClickedPosition(canvas, e);
     const site = getCircleNumber(pos, CENTERS, Rnormal);
 
     if (site < 0) { return }
