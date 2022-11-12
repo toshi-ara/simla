@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>局所麻酔薬シミュレーター</title>
+    <link rel="stylesheet" href="css/style_sim.css">
+    <script src="js/const_ja.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/script.js"></script>
+</head>
+<body>
+    <div id="buttons">
+        <button id="newexp"></button>
+        <button id="start"></button>
+        <button id="quit"></button>
+    </div>
+
+    <div>
+        <input id="slider" type="range" min="1" max="10" value="1">
+        <div id="speed_msg"></div>
+    </div>
+    <div id="timer"></div>
+
+    <div>
+        <canvas id="canvas"  width="481" height="268"></canvas>
+    </div>
+    <div id="response"></div>
+</body>
+
