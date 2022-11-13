@@ -19,3 +19,4 @@ export const ProbThreshold = 0.05
 
 // name of local strage
 export const storageName = "simlationLocalAnesthesia"
+export const storageNameLang = "simlationLocalAnesthesiaLang"

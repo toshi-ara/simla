@@ -6,13 +6,16 @@ import * as func from "./functions.js";
 // variables
 //////////////////////////////////
 
-// object fot timer
+// object for timer
 let time = {
     isRunning:  false,
     start:   Date.now(),
     elapsed: 0,
     total:   0
 }
+
+// variable for lang
+let lang;
 
 // parameters of drugs for each individual
 let param;
@@ -29,10 +32,12 @@ const elem = {};
 //////////////////////////////////
 
 window.addEventListener('DOMContentLoaded', function() {
-    const canvas = document.getElementById("canvas");
+    ["lang", "newexp", "start", "quit", "slider", "timer", "canvas", "response"].forEach(function(id) {
+        elem[id] = document.getElementById(id)
+    });
 
     // set canvas
-    const context = canvas.getContext("2d");
+    const context = elem.canvas.getContext("2d");
     const img = new Image();
     img.src = cval.path_to_fig;
     img.onload = () => {
@@ -46,15 +51,13 @@ window.addEventListener('DOMContentLoaded', function() {
     };
 
     // add EventListener to buttons, slider, timer and canvas
-    ["newexp", "start", "quit", "slider", "timer", "canvas"].forEach(function(id) {
-        elem[id] = document.getElementById(id)
-    });
     elem.newexp.addEventListener(clickEventType, clickNewExp, false);
     elem.start.addEventListener(clickEventType, clickStart, false);
     elem.quit.addEventListener(clickEventType, clickQuit, false);
     elem.canvas.addEventListener(clickEventType,
         (e) => {clickCanvas(canvas, context, e)}, false);
     elem.slider.addEventListener("input", sliderChanged, false);
+    elem.lang.addEventListener("change", toggleLang, false);
 
     // parameters of drugs for each individual
     param = func.setInitParameter(cval.MU0, cval.LOG_SIGMA0, cval.ADR, cval.MU0_adj, cval.D_MU0);
@@ -68,6 +71,29 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     // process in reload of browser
+    lang = getStorageLang();
+    elem.lang.la[lang].checked = true;
+    setLang(lang);
+
+    // change buttons status
+    toggleButton(time.isRunning);
+
+    // display timer
+    displayTimer();
+})
+
+
+//////////////////////////////////
+// redraw buttons in each language
+//////////////////////////////////
+
+function toggleLang() {
+    lang = elem.lang.elements.la.value;
+    setLang(lang)
+    setStorageLang(lang)
+}
+
+function setLang(lang) {
     // start/restart/pause button
     let lab;
     if (time.isRunning) {
@@ -79,16 +105,14 @@ window.addEventListener('DOMContentLoaded', function() {
             lab = labels.restart;
         }
     }
-    elem.start.textContent = lab;
-    elem.newexp.textContent = labels.newexp;
-    elem.quit.textContent = labels.quit;
+    elem.start.textContent = lab[lang];
+    elem.newexp.textContent = labels.newexp[lang];
+    elem.quit.textContent = labels.quit[lang];
     toggleButton(time.isRunning);
+
     // slider
     printSpeed(slider.value)
-
-    // display timer
-    displayTimer();
-})
+}
 
 
 //////////////////////////////////
@@ -112,21 +136,21 @@ function clickCanvas(canvas, context, e) {
         func.fillRect(context, cval.CENTERS[site], cval.Rrespond);
         func.drawCircle(context, cval.CENTERS[site],
                         cval.Rrespond, cval.RrespondCenter, "red");
-        response.textContent = labels.with_response;
-        response.style.color = "red";
+        elem.response.textContent = labels.with_response[lang];
+        elem.response.style.color = "red";
 
         setTimeout(function() {
             func.fillRect(context, cval.CENTERS[site], cval.Rrespond);
             func.drawCircle(context, cval.CENTERS[site],
                             cval.Rnormal, cval.RnormalCenter, "black");
-            response.textContent = "";
+            elem.response.textContent = "";
         }, 300);
     } else {
         // effects without response
-        response.textContent = labels.without_response;
-        response.style.color = "black";
+        elem.response.textContent = labels.without_response[lang];
+        elem.response.style.color = "black";
         setTimeout(function() {
-            response.textContent = "";
+            elem.response.textContent = "";
         }, 300);
     }
 }
@@ -140,7 +164,7 @@ function clickCanvas(canvas, context, e) {
 function clickNewExp() {
     if (time.isRunning) { return }
     // in pause
-    const check = window.confirm(labels.msg_newexp);
+    const check = window.confirm(labels.msg_newexp[lang]);
     if (check) {
         time.isRunning = false;
         time.start = Date.now();
@@ -149,8 +173,7 @@ function clickNewExp() {
         param = func.setInitParameter(cval.MU0, cval.LOG_SIGMA0, cval.ADR, cval.MU0_adj, cval.D_MU0);
         slider.value = 1;
         setStorage();
-        printSpeed(slider.value);
-        elem.start.textContent = labels.start;
+        setLang(lang)
     }
 }
 
@@ -160,13 +183,13 @@ function clickStart() {
         time.isRunning = true;          // running
         time.start = Date.now();
         time.elapsed = 0;
-        elem.start.textContent = labels.pause;
+        setLang(lang)
         toggleButton(true);
     }
     else { // in running
         time.isRunning = false;         // pause
         time.total += time.elapsed;
-        elem.start.textContent = labels.restart;
+        setLang(lang)
         toggleButton(false);
     }
     setStorage();
@@ -176,10 +199,10 @@ function clickStart() {
 function clickQuit() {
     if (time.isRunning) { return }
     // in pause
-    const check = window.confirm(labels.msg_quit);
+    const check = window.confirm(labels.msg_quit[lang]);
     if (check) {
         clearStorage();
-        window.alert(labels.msg_close);
+        window.alert(labels.msg_close[lang]);
     }
 }
 
@@ -210,7 +233,7 @@ function sliderChanged() {
 }
 
 function printSpeed(speed) {
-    speed_msg.textContent = speed + labels.speed;
+    speed_msg.textContent = speed + labels.speed[lang];
 }
 
 
@@ -255,8 +278,21 @@ function getStorage() {
     return params ? JSON.parse(params) : {};
 }
 
+// save data to localStorage (lang)
+function setStorageLang(lang) {
+    localStorage.setItem(cval.storageNameLang, lang)
+}
+
+// get data in localStorage (lang)
+function getStorageLang() {
+    const lang = localStorage.getItem(cval.storageNameLang);
+    return lang ? lang: 0
+}
+
 // delete data in localStorage
 function clearStorage() {
     localStorage.removeItem(cval.storageName);
+    localStorage.removeItem(cval.storageNameLang);
 }
+
 
