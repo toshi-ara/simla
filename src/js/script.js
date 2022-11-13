@@ -2,7 +2,7 @@
 // variables
 //////////////////////////////////
 
-// object fot timer
+// object for timer
 let time = {
     isRunning:  false,
     start:   Date.now(),
@@ -10,8 +10,11 @@ let time = {
     total:   0
 }
 
+// variable for lang
+let lang;
+
 // parameters of drugs for each individual
-let param = setParameter(MU0, LOG_SIGMA0, ADR, MU0_adj, D_MU0);
+let param;
 
 // PC or tablet
 const clickEventType = (window.ontouchstart === undefined) ? "mousedown" : "touchstart";
@@ -24,33 +27,36 @@ const elem = {};
 // setting of display
 //////////////////////////////////
 
-window.onload = ()=>{
-    const canvas = document.getElementById("canvas");
+window.addEventListener('DOMContentLoaded', function() {
+    ["lang", "newexp", "start", "quit", "slider", "timer", "canvas", "response"].forEach(function(id) {
+        elem[id] = document.getElementById(id)
+    });
 
     // set canvas
-    const context = canvas.getContext("2d");
+    const context = elem.canvas.getContext("2d");
     const img = new Image();
-    img.src = path_to_fig;
+    img.src = cval_path_to_fig;
     img.onload = () => {
         // display image
         context.drawImage(img, 0, 0);
         // draw circles
-        CENTERS.forEach(function(center) {
+        cval_CENTERS.forEach(function(center) {
             drawCircle(context, center,
-                       Rnormal, RnormalCenter, "black")
+                       cval_Rnormal, cval_RnormalCenter, "black")
         });
     };
 
     // add EventListener to buttons, slider, timer and canvas
-    ["newexp", "start", "quit", "slider", "timer", "canvas"].forEach(function(id) {
-        elem[id] = document.getElementById(id)
-    });
     elem.newexp.addEventListener(clickEventType, clickNewExp, false);
     elem.start.addEventListener(clickEventType, clickStart, false);
     elem.quit.addEventListener(clickEventType, clickQuit, false);
     elem.canvas.addEventListener(clickEventType,
         (e) => {clickCanvas(canvas, context, e)}, false);
     elem.slider.addEventListener("input", sliderChanged, false);
+    elem.lang.addEventListener("change", toggleLang, false);
+
+    // parameters of drugs for each individual
+    param = setInitParameter(cval_MU0, cval_LOG_SIGMA0, cval_ADR, cval_MU0_adj, cval_D_MU0);
 
     // restore parameters if data is saved in localStorage
     const storage = getStorage();
@@ -61,27 +67,48 @@ window.onload = ()=>{
     }
 
     // process in reload of browser
-    // start/restart/pause button
-    let label;
-    if (time.isRunning) {
-        label = label_pause;
-    } else {
-        if (time.total == 0) {
-            label = label_start;
-        } else {
-            label = label_restart;
-        }
-    }
-    elem.start.textContent = label;
-    elem.newexp.textContent = label_newexp;
-    elem.quit.textContent = label_quit;
+    lang = getStorageLang();
+    elem.lang.la[lang].checked = true;
+    setLang(lang);
+
+    // change buttons status
     toggleButton(time.isRunning);
-    // slider
-    printSpeed(slider.value)
 
     // display timer
     displayTimer();
-};
+})
+
+
+//////////////////////////////////
+// redraw buttons in each language
+//////////////////////////////////
+
+function toggleLang() {
+    lang = elem.lang.elements.la.value;
+    setLang(lang)
+    setStorageLang(lang)
+}
+
+function setLang(lang) {
+    // start/restart/pause button
+    let lab;
+    if (time.isRunning) {
+        lab = labels_pause;
+    } else {
+        if (time.total == 0) {
+            lab = labels_start;
+        } else {
+            lab = labels_restart;
+        }
+    }
+    elem.start.textContent = lab[lang];
+    elem.newexp.textContent = labels_newexp[lang];
+    elem.quit.textContent = labels_quit[lang];
+    toggleButton(time.isRunning);
+
+    // slider
+    printSpeed(slider.value)
+}
 
 
 //////////////////////////////////
@@ -93,7 +120,7 @@ function clickCanvas(canvas, context, e) {
     if (!time.isRunning) { return }
     // running
     const pos = getClickedPosition(canvas, e);
-    const site = getCircleNumber(pos, CENTERS, Rnormal);
+    const site = getCircleNumber(pos, cval_CENTERS, cval_Rnormal);
 
     if (site < 0) { return }
     // when clicked in circles
@@ -102,24 +129,24 @@ function clickCanvas(canvas, context, e) {
 
     if (isResponse) {
         // effects with response
-        fillRect(context, CENTERS[site], Rrespond);
-        drawCircle(context, CENTERS[site],
-                   Rrespond, RrespondCenter, "red");
-        response.textContent = label_with_response;
-        response.style.color = "red";
+        fillRect(context, cval_CENTERS[site], cval_Rrespond);
+        drawCircle(context, cval_CENTERS[site],
+                        cval_Rrespond, cval_RrespondCenter, "red");
+        elem.response.textContent = labels_with_response[lang];
+        elem.response.style.color = "red";
 
         setTimeout(function() {
-            fillRect(context, CENTERS[site], Rrespond);
-            drawCircle(context, CENTERS[site],
-                       Rnormal, RnormalCenter, "black");
-            response.textContent = "";
+            fillRect(context, cval_CENTERS[site], cval_Rrespond);
+            drawCircle(context, cval_CENTERS[site],
+                            cval_Rnormal, cval_RnormalCenter, "black");
+            elem.response.textContent = "";
         }, 300);
     } else {
         // effects without response
-        response.textContent = label_without_response;
-        response.style.color = "black";
+        elem.response.textContent = labels_without_response[lang];
+        elem.response.style.color = "black";
         setTimeout(function() {
-            response.textContent = "";
+            elem.response.textContent = "";
         }, 300);
     }
 }
@@ -133,17 +160,16 @@ function clickCanvas(canvas, context, e) {
 function clickNewExp() {
     if (time.isRunning) { return }
     // in pause
-    const check = window.confirm(msg_newexp);
+    const check = window.confirm(labels_msg_newexp[lang]);
     if (check) {
         time.isRunning = false;
         time.start = Date.now();
         time.elapsed = 0;
         time.total = 0;
-        param = setParameter(MU0, LOG_SIGMA0, ADR, MU0_adj, D_MU0);
+        param = setInitParameter(cval_MU0, cval_LOG_SIGMA0, cval_ADR, cval_MU0_adj, cval_D_MU0);
         slider.value = 1;
         setStorage();
-        printSpeed(slider.value);
-        elem.start.textContent = label_start;
+        setLang(lang)
     }
 }
 
@@ -153,13 +179,13 @@ function clickStart() {
         time.isRunning = true;          // running
         time.start = Date.now();
         time.elapsed = 0;
-        elem.start.textContent = label_pause;
+        setLang(lang)
         toggleButton(true);
     }
     else { // in running
         time.isRunning = false;         // pause
         time.total += time.elapsed;
-        elem.start.textContent = label_restart;
+        setLang(lang)
         toggleButton(false);
     }
     setStorage();
@@ -169,10 +195,10 @@ function clickStart() {
 function clickQuit() {
     if (time.isRunning) { return }
     // in pause
-    const check = window.confirm(msg_quit);
+    const check = window.confirm(labels_msg_quit[lang]);
     if (check) {
         clearStorage();
-        window.alert(msg_close);
+        window.alert(labels_msg_close[lang]);
     }
 }
 
@@ -203,7 +229,7 @@ function sliderChanged() {
 }
 
 function printSpeed(speed) {
-    speed_msg.textContent = speed + label_speed;
+    speed_msg.textContent = speed + labels_speed[lang];
 }
 
 
@@ -235,7 +261,7 @@ function timeFormat(t) {
 
 // save data to localStorage
 function setStorage() {
-    localStorage.setItem(storageName, JSON.stringify({
+    localStorage.setItem(cval_storageName, JSON.stringify({
         time:  time,
         speed: slider.value,
         param: param
@@ -244,12 +270,24 @@ function setStorage() {
 
 // get data in localStorage
 function getStorage() {
-    const params = localStorage.getItem(storageName);
+    const params = localStorage.getItem(cval_storageName);
     return params ? JSON.parse(params) : {};
+}
+
+// save data to localStorage (lang)
+function setStorageLang(lang) {
+    localStorage.setItem(cval_storageNameLang, lang)
+}
+
+// get data in localStorage (lang)
+function getStorageLang() {
+    const lang = localStorage.getItem(cval_storageNameLang);
+    return lang ? lang: 0
 }
 
 // delete data in localStorage
 function clearStorage() {
-    localStorage.removeItem(storageName);
+    localStorage.removeItem(cval_storageName);
+    localStorage.removeItem(cval_storageNameLang);
 }
 
