@@ -1,3 +1,5 @@
+import * as cval from "./cval.js";
+
 //////////////////////////////////
 // statistical functions
 //////////////////////////////////
@@ -10,6 +12,7 @@
 function inv_logit_upper(x) {
   return 1 / (1 + Math.exp(x))
 }
+
 
 // approximate phi function
 // function phi_approx(x) {
@@ -24,7 +27,7 @@ function phi_approx_upper(x) {
 // https://stabucky.com/wp/archives/9263
 function random_norm(mu = 0, sd = 1) {
     let s = 0;
-    for(let i = 0; i < 12; i++) {
+    for (let i = 0; i < 12; i++) {
         s += Math.random();
     }
     return (s - 6) * sd + mu;
@@ -37,7 +40,7 @@ function random_norm(mu = 0, sd = 1) {
 //////////////////////////////////
 
 // Initial setting of parameters
-function setParameter(mu0, log_sigma0, adr, mu_adj, d_mu0) {
+export function setInitParameter(mu0, log_sigma0, adr, mu_adj, d_mu0) {
     const n = 6;
     let param = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
     // individual difference
@@ -45,7 +48,7 @@ function setParameter(mu0, log_sigma0, adr, mu_adj, d_mu0) {
 
     // values of saline are 0
     // set parameters for Pro, Lid, Mep, Bup with random generator
-    for(i = 1; i < n - 1; i++) {
+    for (let i = 1; i < n - 1; i++) {
         param[i][0] = random_norm(mu0[i-1][0] + d, mu0[i-1][1]);
         param[i][1] = Math.exp(random_norm(log_sigma0[i-1][0], log_sigma0[i-1][1]));
     }
@@ -64,7 +67,7 @@ function setParameter(mu0, log_sigma0, adr, mu_adj, d_mu0) {
 //////////////////////////////////
 
 // Draw circle
-function drawCircle(context, center, radiusOuter, radiusInner, color) {
+export function drawCircle(context, center, radiusOuter, radiusInner, color) {
     // outer
     context.beginPath();
     context.arc(center[0], center[1], radiusOuter, 0, Math.PI * 2, true);
@@ -82,7 +85,7 @@ function drawCircle(context, center, radiusOuter, radiusInner, color) {
 
 
 // Fill region in canvas
-function fillRect(context, center, radius) {
+export function fillRect(context, center, radius) {
     const r = radius * 1.3;
     context.fillStyle = "#f4d7d7";
     context.fillRect(center[0] - r, center[1] - r, r * 2, r * 2)
@@ -99,7 +102,7 @@ function fillRect(context, center, radius) {
 //   canvas
 //   e
 // Return: [int:x, int:y]
-function getClickedPosition(canvas, e) {
+export function getClickedPosition(canvas, e) {
     let touch;
     const borderWidth = 0;
 
@@ -134,7 +137,7 @@ function getClickedPosition(canvas, e) {
 //   center: position of center of circle
 //   radius:
 // Return: true/false
-function isInCircle(position, center, radius) {
+export function isInCircle(position, center, radius) {
     var l2 = Math.pow(position[0] - center[0], 2) +
              Math.pow(position[1] - center[1], 2);
     return l2 <= Math.pow(radius, 2);
@@ -147,7 +150,7 @@ function isInCircle(position, center, radius) {
 //   radius
 // Return: circle number
 //   (return -1 when coordinate is out of circles)
-function getCircleNumber(position, centers, radius) {
+export function getCircleNumber(position, centers, radius) {
     var result = -1;
     for (let i = 0; i < centers.length; i++) {
         if (isInCircle(position, centers[i], radius)) {
@@ -177,7 +180,7 @@ function getProbability(time, param) {
 //   time:  minute
 //   param[mu, sigma, adr]
 // Return: true/false
-function getResponse(number, time, param) {
+export function getResponse(number, time, param) {
     let prob;
     if (number == 0) {
         // saline
@@ -185,7 +188,7 @@ function getResponse(number, time, param) {
     } else {
         prob = getProbability(time, param[number]);
         // not respond when probability is less than threshold
-        if (prob < ProbThreshold) {
+        if (prob < cval.ProbThreshold) {
             return false
         }
     }

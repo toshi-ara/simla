@@ -1,3 +1,7 @@
+import * as cval from "./cval.js";
+import * as labels from "./labels.js";
+import * as func from "./functions.js";
+
 //////////////////////////////////
 // variables
 //////////////////////////////////
@@ -11,7 +15,7 @@ let time = {
 }
 
 // parameters of drugs for each individual
-let param = setParameter(MU0, LOG_SIGMA0, ADR, MU0_adj, D_MU0);
+let param;
 
 // PC or tablet
 const clickEventType = (window.ontouchstart === undefined) ? "mousedown" : "touchstart";
@@ -24,20 +28,20 @@ const elem = {};
 // setting of display
 //////////////////////////////////
 
-window.onload = ()=>{
+window.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById("canvas");
 
     // set canvas
     const context = canvas.getContext("2d");
     const img = new Image();
-    img.src = path_to_fig;
+    img.src = cval.path_to_fig;
     img.onload = () => {
         // display image
         context.drawImage(img, 0, 0);
         // draw circles
-        CENTERS.forEach(function(center) {
-            drawCircle(context, center,
-                       Rnormal, RnormalCenter, "black")
+        cval.CENTERS.forEach(function(center) {
+            func.drawCircle(context, center,
+                            cval.Rnormal, cval.RnormalCenter, "black")
         });
     };
 
@@ -52,6 +56,9 @@ window.onload = ()=>{
         (e) => {clickCanvas(canvas, context, e)}, false);
     elem.slider.addEventListener("input", sliderChanged, false);
 
+    // parameters of drugs for each individual
+    param = func.setInitParameter(cval.MU0, cval.LOG_SIGMA0, cval.ADR, cval.MU0_adj, cval.D_MU0);
+
     // restore parameters if data is saved in localStorage
     const storage = getStorage();
     if (Object.keys(storage).length > 0) {
@@ -62,26 +69,26 @@ window.onload = ()=>{
 
     // process in reload of browser
     // start/restart/pause button
-    let label;
+    let lab;
     if (time.isRunning) {
-        label = label_pause;
+        lab = labels.pause;
     } else {
         if (time.total == 0) {
-            label = label_start;
+            lab = labels.start;
         } else {
-            label = label_restart;
+            lab = labels.restart;
         }
     }
-    elem.start.textContent = label;
-    elem.newexp.textContent = label_newexp;
-    elem.quit.textContent = label_quit;
+    elem.start.textContent = lab;
+    elem.newexp.textContent = labels.newexp;
+    elem.quit.textContent = labels.quit;
     toggleButton(time.isRunning);
     // slider
     printSpeed(slider.value)
 
     // display timer
     displayTimer();
-};
+})
 
 
 //////////////////////////////////
@@ -92,31 +99,31 @@ window.onload = ()=>{
 function clickCanvas(canvas, context, e) {
     if (!time.isRunning) { return }
     // running
-    const pos = getClickedPosition(canvas, e);
-    const site = getCircleNumber(pos, CENTERS, Rnormal);
+    const pos = func.getClickedPosition(canvas, e);
+    const site = func.getCircleNumber(pos, cval.CENTERS, cval.Rnormal);
 
     if (site < 0) { return }
     // when clicked in circles
     const Time = (time.total + time.elapsed) / 60000; // (min)
-    const isResponse = getResponse(site, Time, param);
+    const isResponse = func.getResponse(site, Time, param);
 
     if (isResponse) {
         // effects with response
-        fillRect(context, CENTERS[site], Rrespond);
-        drawCircle(context, CENTERS[site],
-                   Rrespond, RrespondCenter, "red");
-        response.textContent = label_with_response;
+        func.fillRect(context, cval.CENTERS[site], cval.Rrespond);
+        func.drawCircle(context, cval.CENTERS[site],
+                        cval.Rrespond, cval.RrespondCenter, "red");
+        response.textContent = labels.with_response;
         response.style.color = "red";
 
         setTimeout(function() {
-            fillRect(context, CENTERS[site], Rrespond);
-            drawCircle(context, CENTERS[site],
-                       Rnormal, RnormalCenter, "black");
+            func.fillRect(context, cval.CENTERS[site], cval.Rrespond);
+            func.drawCircle(context, cval.CENTERS[site],
+                            cval.Rnormal, cval.RnormalCenter, "black");
             response.textContent = "";
         }, 300);
     } else {
         // effects without response
-        response.textContent = label_without_response;
+        response.textContent = labels.without_response;
         response.style.color = "black";
         setTimeout(function() {
             response.textContent = "";
@@ -133,17 +140,17 @@ function clickCanvas(canvas, context, e) {
 function clickNewExp() {
     if (time.isRunning) { return }
     // in pause
-    const check = window.confirm(msg_newexp);
+    const check = window.confirm(labels.msg_newexp);
     if (check) {
         time.isRunning = false;
         time.start = Date.now();
         time.elapsed = 0;
         time.total = 0;
-        param = setParameter(MU0, LOG_SIGMA0, ADR, MU0_adj, D_MU0);
+        param = func.setInitParameter(cval.MU0, cval.LOG_SIGMA0, cval.ADR, cval.MU0_adj, cval.D_MU0);
         slider.value = 1;
         setStorage();
         printSpeed(slider.value);
-        elem.start.textContent = label_start;
+        elem.start.textContent = labels.start;
     }
 }
 
@@ -153,13 +160,13 @@ function clickStart() {
         time.isRunning = true;          // running
         time.start = Date.now();
         time.elapsed = 0;
-        elem.start.textContent = label_pause;
+        elem.start.textContent = labels.pause;
         toggleButton(true);
     }
     else { // in running
         time.isRunning = false;         // pause
         time.total += time.elapsed;
-        elem.start.textContent = label_restart;
+        elem.start.textContent = labels.restart;
         toggleButton(false);
     }
     setStorage();
@@ -169,10 +176,10 @@ function clickStart() {
 function clickQuit() {
     if (time.isRunning) { return }
     // in pause
-    const check = window.confirm(msg_quit);
+    const check = window.confirm(labels.msg_quit);
     if (check) {
         clearStorage();
-        window.alert(msg_close);
+        window.alert(labels.msg_close);
     }
 }
 
@@ -203,7 +210,7 @@ function sliderChanged() {
 }
 
 function printSpeed(speed) {
-    speed_msg.textContent = speed + label_speed;
+    speed_msg.textContent = speed + labels.speed;
 }
 
 
@@ -235,7 +242,7 @@ function timeFormat(t) {
 
 // save data to localStorage
 function setStorage() {
-    localStorage.setItem(storageName, JSON.stringify({
+    localStorage.setItem(cval.storageName, JSON.stringify({
         time:  time,
         speed: slider.value,
         param: param
@@ -244,12 +251,12 @@ function setStorage() {
 
 // get data in localStorage
 function getStorage() {
-    const params = localStorage.getItem(storageName);
+    const params = localStorage.getItem(cval.storageName);
     return params ? JSON.parse(params) : {};
 }
 
 // delete data in localStorage
 function clearStorage() {
-    localStorage.removeItem(storageName);
+    localStorage.removeItem(cval.storageName);
 }
 
