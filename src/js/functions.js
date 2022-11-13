@@ -11,6 +11,7 @@ function inv_logit_upper(x) {
   return 1 / (1 + Math.exp(x))
 }
 
+
 // approximate phi function
 // function phi_approx(x) {
 //     return inv_logit(0.07056 * Math.pow(x, 3) + 1.5976 * x)
@@ -24,7 +25,7 @@ function phi_approx_upper(x) {
 // https://stabucky.com/wp/archives/9263
 function random_norm(mu = 0, sd = 1) {
     let s = 0;
-    for(let i = 0; i < 12; i++) {
+    for (let i = 0; i < 12; i++) {
         s += Math.random();
     }
     return (s - 6) * sd + mu;
@@ -37,7 +38,7 @@ function random_norm(mu = 0, sd = 1) {
 //////////////////////////////////
 
 // Initial setting of parameters
-function setParameter(mu0, log_sigma0, adr, mu_adj, d_mu0) {
+function setInitParameter(mu0, log_sigma0, adr, mu_adj, d_mu0) {
     const n = 6;
     let param = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
     // individual difference
@@ -45,7 +46,7 @@ function setParameter(mu0, log_sigma0, adr, mu_adj, d_mu0) {
 
     // values of saline are 0
     // set parameters for Pro, Lid, Mep, Bup with random generator
-    for(i = 1; i < n - 1; i++) {
+    for (let i = 1; i < n - 1; i++) {
         param[i][0] = random_norm(mu0[i-1][0] + d, mu0[i-1][1]);
         param[i][1] = Math.exp(random_norm(log_sigma0[i-1][0], log_sigma0[i-1][1]));
     }
@@ -185,7 +186,7 @@ function getResponse(number, time, param) {
     } else {
         prob = getProbability(time, param[number]);
         // not respond when probability is less than threshold
-        if (prob < ProbThreshold) {
+        if (prob < cval_ProbThreshold) {
             return false
         }
     }
