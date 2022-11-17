@@ -1,39 +1,4 @@
 //////////////////////////////////
-// statistical functions
-//////////////////////////////////
-
-// logistic function
-// function inv_logit(x) {
-//     return 1 / (1 + Math.exp(-x))
-// }
-
-function inv_logit_upper(x) {
-  return 1 / (1 + Math.exp(x))
-}
-
-
-// approximate phi function
-// function phi_approx(x) {
-//     return inv_logit(0.07056 * Math.pow(x, 3) + 1.5976 * x)
-// }
-
-function phi_approx_upper(x) {
-    return inv_logit_upper(0.07056 * Math.pow(x, 3) + 1.5976 * x)
-}
-
-// Random generation according to standard normal distribution
-// https://stabucky.com/wp/archives/9263
-function random_norm(mu = 0, sd = 1) {
-    let s = 0;
-    for (let i = 0; i < 12; i++) {
-        s += Math.random();
-    }
-    return (s - 6) * sd + mu;
-}
-
-
-
-//////////////////////////////////
 // function for setting of parameter
 //////////////////////////////////
 
@@ -42,13 +7,13 @@ function setInitParameter(mu0, log_sigma0, adr, mu_adj, d_mu0) {
     const n = 6;
     let param = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
     // individual difference
-    const d = mu_adj + random_norm(d_mu0[0], d_mu0[1]);
+    const d = mu_adj + MyStat.random_norm(d_mu0[0], d_mu0[1]);
 
     // values of saline are 0
     // set parameters for Pro, Lid, Mep, Bup with random generator
     for (let i = 1; i < n - 1; i++) {
-        param[i][0] = random_norm(mu0[i-1][0] + d, mu0[i-1][1]);
-        param[i][1] = Math.exp(random_norm(log_sigma0[i-1][0], log_sigma0[i-1][1]));
+        param[i][0] = MyStat.random_norm(mu0[i-1][0] + d, mu0[i-1][1]);
+        param[i][1] = Math.exp(MyStat.random_norm(log_sigma0[i-1][0], log_sigma0[i-1][1]));
     }
     // Lid + Adr
     param[n-1][0] = param[2][0]
@@ -166,7 +131,7 @@ function getCircleNumber(position, centers, radius) {
 // Return: probability (0-1)
 function getProbability(time, param) {
     var X = 100 - (1 - param[2]) * time;
-    return phi_approx_upper((X - param[0]) / param[1])
+    return MyStat.phi_approx_upper((X - param[0]) / param[1])
 }
 
 
