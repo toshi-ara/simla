@@ -1,5 +1,6 @@
 html {
     text-align: center;
+    font-family: sans-serif;
     background: mintcream;
     margin-left: auto;
     margin-right: auto;
@@ -12,6 +13,7 @@ html {
     width: 300px;
 }
 #timer {
+    font-family: monospace;
     font-size: 60px;
     padding: 20px;
 }
