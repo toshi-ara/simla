@@ -28,14 +28,14 @@ class SimLocalAnesthesia {
         // set canvas
         const context = this.elem.canvas.getContext("2d");
         const img = new Image();
-        img.src = cval_path_to_fig;
+        img.src = ConstVal.path_to_fig;
         img.onload = () => {
             // display image
             context.drawImage(img, 0, 0);
             // draw circles
-            cval_CENTERS.forEach(function(center) {
+            ConstVal.CENTERS.forEach(function(center) {
                 Draw.drawCircle(context, center,
-                                cval_Rnormal, cval_RnormalCenter, "black")
+                                ConstVal.Rnormal, ConstVal.RnormalCenter, "black")
             });
         };
 
@@ -58,7 +58,7 @@ class SimLocalAnesthesia {
 
 
         // parameters of drugs for each individual
-        this.param = this.setInitParameter(cval_MU0, cval_LOG_SIGMA0, cval_ADR, cval_MU0_adj, cval_D_MU0);
+        this.param = this.setInitParameter(ConstVal.MU0, ConstVal.LOG_SIGMA0, ConstVal.ADR, ConstVal.MU0_adj, ConstVal.D_MU0);
         this.lang = 0;
 
         // restore parameters if data is saved in localStorage
@@ -120,7 +120,7 @@ class SimLocalAnesthesia {
         if (!this.time.isRunning) { return }
         // running
         const pos = this.getClickedPosition(canvas, e);
-        const site = this.getCircleNumber(pos, cval_CENTERS, cval_Rnormal);
+        const site = this.getCircleNumber(pos, ConstVal.CENTERS, ConstVal.Rnormal);
 
         if (site < 0) { return }
         // when clicked in circles
@@ -129,21 +129,21 @@ class SimLocalAnesthesia {
 
         if (isResponse) {
             // effects with response
-            Draw.fillRect(context, cval_CENTERS[site], cval_Rrespond);
-            Draw.drawCircle(context, cval_CENTERS[site],
-                            cval_Rrespond, cval_RrespondCenter, "red");
-            this.elem.response.textContent = labels_with_response[this.lang];
+            Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
+            Draw.drawCircle(context, ConstVal.CENTERS[site],
+                            ConstVal.Rrespond, ConstVal.RrespondCenter, "red");
+            this.elem.response.textContent = Labels.with_response[this.lang];
             this.elem.response.style.color = "red";
 
             setTimeout(function() {
-                Draw.fillRect(context, cval_CENTERS[site], cval_Rrespond);
-                Draw.drawCircle(context, cval_CENTERS[site],
-                                cval_Rnormal, cval_RnormalCenter, "black");
+                Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
+                Draw.drawCircle(context, ConstVal.CENTERS[site],
+                                ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
                 this.elem.response.textContent = "";
             }.bind(this), 300);
         } else {
             // effects without response
-            this.elem.response.textContent = labels_without_response[this.lang];
+            this.elem.response.textContent = Labels.without_response[this.lang];
             this.elem.response.style.color = "black";
             setTimeout(function() {
                 this.elem.response.textContent = "";
@@ -165,17 +165,17 @@ class SimLocalAnesthesia {
         // start/restart/pause button
         let lab;
         if (this.time.isRunning) {
-            lab = labels_pause;
+            lab = Labels.pause;
         } else {
             if (this.time.total == 0) {
-                lab = labels_start;
+                lab = Labels.start;
             } else {
-                lab = labels_restart;
+                lab = Labels.restart;
             }
         }
         this.elem.start.textContent = lab[lang];
-        this.elem.newexp.textContent = labels_newexp[lang];
-        this.elem.quit.textContent = labels_quit[lang];
+        this.elem.newexp.textContent = Labels.newexp[lang];
+        this.elem.quit.textContent = Labels.quit[lang];
         this.toggleButton(this.time.isRunning);
 
         // slider
@@ -186,13 +186,13 @@ class SimLocalAnesthesia {
      clickNewExp() {
         if (this.time.isRunning) { return }
         // in pause
-        const check = window.confirm(labels_msg_newexp[this.lang]);
+        const check = window.confirm(Labels.msg_newexp[this.lang]);
         if (check) {
             this.time.isRunning = false;
             this.time.start = Date.now();
             this.time.elapsed = 0;
             this.time.total = 0;
-            this.param = this.setInitParameter(cval_MU0, cval_LOG_SIGMA0, cval_ADR, cval_MU0_adj, cval_D_MU0);
+            this.param = this.setInitParameter(ConstVal.MU0, ConstVal.LOG_SIGMA0, ConstVal.ADR, ConstVal.MU0_adj, ConstVal.D_MU0);
             slider.value = 1;
             this.setStorage();
             this.setLang(this.lang)
@@ -221,11 +221,11 @@ class SimLocalAnesthesia {
     clickQuit() {
         if (this.time.isRunning) { return }
         // in pause
-        const check = window.confirm(labels_msg_quit[this.lang]);
+        const check = window.confirm(Labels.msg_quit[this.lang]);
         if (check) {
             this.clearStorage();
             this.clearStorageLang();
-            window.alert(labels_msg_close[this.lang]);
+            window.alert(Labels.msg_close[this.lang]);
         }
     }
 
@@ -253,7 +253,7 @@ class SimLocalAnesthesia {
     }
 
     printSpeed(speed) {
-        this.elem.speed_msg.textContent = speed + labels_speed[this.lang];
+        this.elem.speed_msg.textContent = speed + Labels.speed[this.lang];
     }
 
     //////////////////////////////////
@@ -349,7 +349,7 @@ class SimLocalAnesthesia {
         } else {
             prob = this.getProbability(time, param[number]);
             // not respond when probability is less than threshold
-            if (prob < cval_ProbThreshold) {
+            if (prob < ConstVal.ProbThreshold) {
                 return false
             }
         }
@@ -383,7 +383,7 @@ class SimLocalAnesthesia {
     //////////////////////////////////
     // save data to localStorage
      setStorage() {
-        localStorage.setItem(cval_storageName, JSON.stringify({
+        localStorage.setItem(ConstVal.storageName, JSON.stringify({
             time:  this.time,
             speed: slider.value,
             param: this.param
@@ -392,25 +392,25 @@ class SimLocalAnesthesia {
 
     // get data in localStorage
      getStorage() {
-        const params = localStorage.getItem(cval_storageName);
+        const params = localStorage.getItem(ConstVal.storageName);
         return params ? JSON.parse(params) : {};
     }
 
     // save data to localStorage (lang)
      setStorageLang() {
-        localStorage.setItem(cval_storageNameLang, this.lang)
+        localStorage.setItem(ConstVal.storageNameLang, this.lang)
     }
 
     // get data in localStorage (lang)
      getStorageLang() {
-        const lang = localStorage.getItem(cval_storageNameLang);
+        const lang = localStorage.getItem(ConstVal.storageNameLang);
         return lang ? lang: 0
     }
 
     // delete data in localStorage
      clearStorage() {
-        localStorage.removeItem(cval_storageName);
-        localStorage.removeItem(cval_storageNameLang);
+        localStorage.removeItem(ConstVal.storageName);
+        localStorage.removeItem(ConstVal.storageNameLang);
     }
 }
 
