@@ -36,7 +36,7 @@ class Timer {
         } else {
             t = this._total;
         }
-        return  this.timeFormat(t);
+        return this.timeFormat(t);
     }
 
     timeFormat(t) {
