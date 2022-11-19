@@ -19,7 +19,9 @@ class ConstVal {
     static ProbThreshold = 0.05;
 
     // name of local strage
-    static storageName = "simlationLocalAnesthesia";
+    static storageNameSpeed = "simlationLocalAnesthesiaSpeed";
+    static storageNameTime = "simlationLocalAnesthesiaTime";
+    static storageNameParam = "simlationLocalAnesthesiaParam";
     static storageNameLang = "simlationLocalAnesthesiaLang";
 }
 
