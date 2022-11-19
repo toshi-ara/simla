@@ -60,7 +60,7 @@ class SimLocalAnesthesia {
 
         this.lang = this.getStorageLang();
         this.elem.lang.la[this.lang].checked = true;
-        this.setLang(this.lang);
+        this.setLang();
 
         // change buttons status
         this.toggleButton();
@@ -122,11 +122,11 @@ class SimLocalAnesthesia {
     // redraw buttons in each language
     toggleLang() {
         this.lang = this.elem.lang.elements.la.value;
-        this.setLang(this.lang)
+        this.setLang()
         this.setStorageLang()
     }
 
-    setLang(lang) {
+    setLang() {
         // start/restart/pause button
         let lab;
         if (this.time.isRunning()) {
@@ -138,9 +138,9 @@ class SimLocalAnesthesia {
                 lab = Labels.restart;
             }
         }
-        this.elem.start.textContent = lab[lang];
-        this.elem.newexp.textContent = Labels.newexp[lang];
-        this.elem.quit.textContent = Labels.quit[lang];
+        this.elem.start.textContent = lab[this.lang];
+        this.elem.newexp.textContent = Labels.newexp[this.lang];
+        this.elem.quit.textContent = Labels.quit[this.lang];
         this.toggleButton();
 
         // slider
@@ -157,14 +157,14 @@ class SimLocalAnesthesia {
             this.param.setInitParameter();
             slider.value = 1;
             this.setStorageSpeed();
-            this.setLang(this.lang)
+            this.setLang()
         }
     }
 
     // push start/restart/pause button
     clickStart() {
         this.time.clickStart();
-        this.setLang(this.lang)
+        this.setLang()
         this.toggleButton();
         this.setStorageSpeed();
     }
