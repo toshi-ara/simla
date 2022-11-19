@@ -20,6 +20,7 @@ class ConstVal {
 
     // name of local strage
     static storageName = "simlationLocalAnesthesia";
+    static storageNameTime = "simlationLocalAnesthesiaTime";
     static storageNameLang = "simlationLocalAnesthesiaLang";
 }
 
