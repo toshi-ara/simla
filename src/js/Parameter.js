@@ -1,6 +1,7 @@
 class Parameter {
     constructor() {
         this.param = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+        this.storageName = "SimLaParam";
 
         // restore parameters if data is saved in localStorage
         const storage = this.getStorage();
@@ -44,20 +45,20 @@ class Parameter {
     //////////////////////////////////
     // save data to localStorage
     setStorage() {
-        localStorage.setItem(ConstVal.storageNameParam, JSON.stringify({
+        localStorage.setItem(this.storageName, JSON.stringify({
             param: this.param
         }));
     }
 
     // get data in localStorage
     getStorage() {
-        const params = localStorage.getItem(ConstVal.storageNameParam);
+        const params = localStorage.getItem(this.storageName);
         return params ? JSON.parse(params) : {};
     }
 
     // delete data in localStorage
     clearStorage() {
-        localStorage.removeItem(ConstVal.storageNameParam);
+        localStorage.removeItem(this.storageName);
     }
 }
 

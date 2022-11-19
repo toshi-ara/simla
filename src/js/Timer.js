@@ -4,6 +4,7 @@ class Timer {
         this._start = Date.now();
         this._elapsed = 0;
         this._total = 0;
+        this.storageName = "SimLaTime";
 
         // restore parameters if data is saved in localStorage
         const storage = this.getStorage();
@@ -35,7 +36,7 @@ class Timer {
         } else {
             t = this._total;
         }
-        return  this.timeFormat(t);
+        return this.timeFormat(t);
     }
 
     timeFormat(t) {
@@ -92,7 +93,7 @@ class Timer {
     //////////////////////////////////
     // save data to localStorage
     setStorage() {
-        localStorage.setItem(ConstVal.storageNameTime, JSON.stringify({
+        localStorage.setItem(this.storageName, JSON.stringify({
             isRunning: this._isRunning,
             start: this._start,
             elapsed: this._elapsed,
@@ -102,13 +103,13 @@ class Timer {
 
     // get data in localStorage
     getStorage() {
-        const params = localStorage.getItem(ConstVal.storageNameTime);
+        const params = localStorage.getItem(this.storageName);
         return params ? JSON.parse(params) : {};
     }
 
     // delete data in localStorage
     clearStorage() {
-        localStorage.removeItem(ConstVal.storageNameTime);
+        localStorage.removeItem(this.storageName);
     }
 }
 

@@ -1,6 +1,6 @@
 class SimLocalAnesthesia {
-    time;
     lang;
+    time;
     param;
     elem;
 
@@ -51,19 +51,16 @@ class SimLocalAnesthesia {
         this.elem.lang.addEventListener("change",
             this.toggleLang.bind(this), false);
 
-        this.lang = 0;
-
+        // process in reload of browser
         // restore parameters if data is saved in localStorage
         const storage = this.getStorageSpeed();
         if (Object.keys(storage).length > 0) {
             slider.value = storage.speed;
         }
 
-        // process in reload of browser
         this.lang = this.getStorageLang();
         this.elem.lang.la[this.lang].checked = true;
         this.setLang(this.lang);
-
 
         // change buttons status
         this.toggleButton();
