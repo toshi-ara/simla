@@ -5,8 +5,8 @@ class SimLocalAnesthesia {
     elem;
 
     constructor() {
-        // // object for timer
         this.time = new Timer();
+        this.param = new Parameter();
 
         // object for EventListner
         this.elem = {};
@@ -51,16 +51,12 @@ class SimLocalAnesthesia {
         this.elem.lang.addEventListener("change",
             this.toggleLang.bind(this), false);
 
-
-        // parameters of drugs for each individual
-        this.param = this.setInitParameter(ConstVal.MU0, ConstVal.LOG_SIGMA0, ConstVal.ADR, ConstVal.MU0_adj, ConstVal.D_MU0);
         this.lang = 0;
 
         // restore parameters if data is saved in localStorage
         const storage = this.getStorage();
         if (Object.keys(storage).length > 0) {
             slider.value = storage.speed;
-            this.param = storage.param;
         }
 
         // process in reload of browser
@@ -86,29 +82,6 @@ class SimLocalAnesthesia {
     //////////////////////////////////////////////////////////////////
 
     //////////////////////////////////
-    // setting of initial parameter
-    //////////////////////////////////
-    setInitParameter(mu0, log_sigma0, adr, mu_adj, d_mu0) {
-        const n = 6;
-        let param = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
-        // individual difference
-        const d = mu_adj + MyStat.random_norm(d_mu0[0], d_mu0[1]);
-
-        // values of saline are 0
-        // set parameters for Pro, Lid, Mep, Bup with random generator
-        for (let i = 1; i < n - 1; i++) {
-            param[i][0] = MyStat.random_norm(mu0[i-1][0] + d, mu0[i-1][1]);
-            param[i][1] = Math.exp(MyStat.random_norm(log_sigma0[i-1][0], log_sigma0[i-1][1]));
-        }
-        // Lid + Adr
-        param[n-1][0] = param[2][0]
-        param[n-1][1] = param[2][1]
-        param[n-1][2] = adr
-
-        return param
-    }
-
-    //////////////////////////////////
     // mousedown in canvas area
     //////////////////////////////////
     clickCanvas(canvas, context, e) {
@@ -119,7 +92,8 @@ class SimLocalAnesthesia {
 
         if (site < 0) { return }
         // when clicked in circles
-        const isResponse = this.getResponse(site, this.time.getMinute(), this.param);
+        const isResponse = this.getResponse(site, this.time.getMinute(),
+                                            this.param.getParameter());
 
         if (isResponse) {
             // effects with response
@@ -183,7 +157,7 @@ class SimLocalAnesthesia {
         const check = window.confirm(Labels.msg_newexp[this.lang]);
         if (check) {
             this.time.clickNewExp();
-            this.param = this.setInitParameter(ConstVal.MU0, ConstVal.LOG_SIGMA0, ConstVal.ADR, ConstVal.MU0_adj, ConstVal.D_MU0);
+            this.param.setInitParameter();
             slider.value = 1;
             this.setStorage();
             this.setLang(this.lang)
@@ -205,6 +179,7 @@ class SimLocalAnesthesia {
         const check = window.confirm(Labels.msg_quit[this.lang]);
         if (check) {
             this.time.clickQuit();
+            this.param.clearStorage();
             this.clearStorage();
             this.clearStorageLang();
             window.alert(Labels.msg_close[this.lang]);
@@ -352,7 +327,6 @@ class SimLocalAnesthesia {
     setStorage() {
         localStorage.setItem(ConstVal.storageName, JSON.stringify({
             speed: slider.value,
-            param: this.param
         }));
     }
 
