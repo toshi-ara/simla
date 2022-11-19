@@ -54,7 +54,7 @@ class SimLocalAnesthesia {
         this.lang = 0;
 
         // restore parameters if data is saved in localStorage
-        const storage = this.getStorage();
+        const storage = this.getStorageSpeed();
         if (Object.keys(storage).length > 0) {
             slider.value = storage.speed;
         }
@@ -159,7 +159,7 @@ class SimLocalAnesthesia {
             this.time.clickNewExp();
             this.param.setInitParameter();
             slider.value = 1;
-            this.setStorage();
+            this.setStorageSpeed();
             this.setLang(this.lang)
         }
     }
@@ -169,7 +169,7 @@ class SimLocalAnesthesia {
         this.time.clickStart();
         this.setLang(this.lang)
         this.toggleButton(this.time.isRunning());
-        this.setStorage();
+        this.setStorageSpeed();
     }
 
     // push quit button
@@ -178,11 +178,10 @@ class SimLocalAnesthesia {
         // in pause
         const check = window.confirm(Labels.msg_quit[this.lang]);
         if (check) {
+            window.alert(Labels.msg_close[this.lang]);
             this.time.clickQuit();
             this.param.clearStorage();
             this.clearStorage();
-            this.clearStorageLang();
-            window.alert(Labels.msg_close[this.lang]);
         }
     }
 
@@ -202,7 +201,7 @@ class SimLocalAnesthesia {
     sliderChanged() {
         this.printSpeed(slider.value)
         this.time.sliderChanged();
-        this.setStorage();
+        this.setStorageSpeed();
     }
 
     printSpeed(speed) {
@@ -324,15 +323,15 @@ class SimLocalAnesthesia {
     // localStrage
     //////////////////////////////////
     // save data to localStorage
-    setStorage() {
-        localStorage.setItem(ConstVal.storageName, JSON.stringify({
+    setStorageSpeed() {
+        localStorage.setItem(ConstVal.storageNameSpeed, JSON.stringify({
             speed: slider.value,
         }));
     }
 
     // get data in localStorage
-    getStorage() {
-        const params = localStorage.getItem(ConstVal.storageName);
+    getStorageSpeed() {
+        const params = localStorage.getItem(ConstVal.storageNameSpeed);
         return params ? JSON.parse(params) : {};
     }
 
@@ -349,7 +348,7 @@ class SimLocalAnesthesia {
 
     // delete data in localStorage
     clearStorage() {
-        localStorage.removeItem(ConstVal.storageName);
+        localStorage.removeItem(ConstVal.storageNameSpeed);
         localStorage.removeItem(ConstVal.storageNameLang);
     }
 }
