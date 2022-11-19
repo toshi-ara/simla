@@ -66,7 +66,7 @@ class SimLocalAnesthesia {
 
 
         // change buttons status
-        this.toggleButton(this.time.isRunning());
+        this.toggleButton();
 
         // display timer
         this.elem.timer.textContent = "0:00:00"
@@ -144,7 +144,7 @@ class SimLocalAnesthesia {
         this.elem.start.textContent = lab[lang];
         this.elem.newexp.textContent = Labels.newexp[lang];
         this.elem.quit.textContent = Labels.quit[lang];
-        this.toggleButton(this.time.isRunning());
+        this.toggleButton();
 
         // slider
         this.printSpeed(slider.value)
@@ -168,7 +168,7 @@ class SimLocalAnesthesia {
     clickStart() {
         this.time.clickStart();
         this.setLang(this.lang)
-        this.toggleButton(this.time.isRunning());
+        this.toggleButton();
         this.setStorageSpeed();
     }
 
@@ -185,8 +185,8 @@ class SimLocalAnesthesia {
         }
     }
 
-    toggleButton(isRunning) {
-        if (isRunning) {
+    toggleButton() {
+        if (this.time.isRunning()) {
             this.elem.newexp.style.color = "gray";
             this.elem.quit.style.color = "gray";
         } else {
