@@ -30,7 +30,7 @@ class SimLocalAnesthesia {
             // draw circles
             ConstVal.CENTERS.forEach(function(center) {
                 Draw.drawCircle(context, center,
-                    ConstVal.Rnormal, ConstVal.RnormalCenter, "black")
+                                ConstVal.Rnormal, ConstVal.RnormalCenter, "black")
             });
         };
 
@@ -96,14 +96,14 @@ class SimLocalAnesthesia {
             // effects with response
             Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
             Draw.drawCircle(context, ConstVal.CENTERS[site],
-                ConstVal.Rrespond, ConstVal.RrespondCenter, "red");
+                            ConstVal.Rrespond, ConstVal.RrespondCenter, "red");
             this.elem.response.textContent = Labels.with_response[this.lang];
             this.elem.response.style.color = "red";
 
             setTimeout(function() {
                 Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
                 Draw.drawCircle(context, ConstVal.CENTERS[site],
-                    ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
+                                ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
                 this.elem.response.textContent = "";
             }.bind(this), 300);
         } else {
@@ -249,8 +249,8 @@ class SimLocalAnesthesia {
     //   radius:
     // Return: true/false
     isInCircle(position, center, radius) {
-        var l2 = Math.pow(position[0] - center[0], 2) +
-            Math.pow(position[1] - center[1], 2);
+        const l2 = Math.pow(position[0] - center[0], 2) +
+                   Math.pow(position[1] - center[1], 2);
         return l2 <= Math.pow(radius, 2);
     }
 
@@ -262,7 +262,7 @@ class SimLocalAnesthesia {
     // Return: circle number
     //   (return -1 when coordinate is out of circles)
     getCircleNumber(position, centers, radius) {
-        var result = -1;
+        let result = -1;
         for (let i = 0; i < centers.length; i++) {
             if (this.isInCircle(position, centers[i], radius)) {
                 result = i
@@ -278,7 +278,7 @@ class SimLocalAnesthesia {
     //   param[mu, sigma, adr]
     // Return: probability (0-1)
     getProbability(time, param) {
-        var X = 100 - (1 - param[2]) * time;
+        let X = 100 - (1 - param[2]) * time;
         return MyStat.phi_approx_upper((X - param[0]) / param[1])
     }
 
@@ -340,7 +340,7 @@ class SimLocalAnesthesia {
     // get data in localStorage (lang)
     getStorageLang() {
         const lang = localStorage.getItem(ConstVal.storageNameLang);
-        return lang ? lang: 0
+        return lang ? lang : 0
     }
 
     // delete data in localStorage
