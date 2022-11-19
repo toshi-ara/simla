@@ -1,8 +1,8 @@
 class ConstVal {
     // parameters of drugs
-    static MU0 = [[75, 5], [67, 5], [52, 4], [34, 7]];
+    static MU0 = [[75, 8], [67, 5], [43, 6], [30, 10]];
     static LOG_SIGMA0 = [[2.2, 0.4], [2.4, 0.4], [2.4, 0.4], [2.5, 0.5]];
-    static ADR = 0.665;
+    static ADR = 0.7;
     static MU0_adj = 0;
     static D_MU0 = [0, 4];
 
