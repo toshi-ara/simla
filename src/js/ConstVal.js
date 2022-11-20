@@ -12,7 +12,7 @@ class ConstVal {
                       [218, 150], [289, 150], [360, 150]];
     static Rnormal = 20;
     static RnormalCenter = 3;
-    static Rrespond =18;
+    static Rrespond = 18;
     static RrespondCenter = 2;
 
     // threshold of probability not to respond

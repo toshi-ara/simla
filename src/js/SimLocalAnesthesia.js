@@ -30,7 +30,7 @@ class SimLocalAnesthesia {
             // draw circles
             ConstVal.CENTERS.forEach(function(center) {
                 Draw.drawCircle(context, center,
-                    ConstVal.Rnormal, ConstVal.RnormalCenter, "black")
+                                ConstVal.Rnormal, ConstVal.RnormalCenter, "black")
             });
         };
 
@@ -39,17 +39,17 @@ class SimLocalAnesthesia {
 
         // add EventListener to buttons, slider, timer and canvas
         this.elem.newexp.addEventListener(clickEventType,
-            this.clickNewExp.bind(this), false);
+            () => {this.clickNewExp()}, false);
         this.elem.start.addEventListener(clickEventType,
-            this.clickStart.bind(this), false);
+            () => {this.clickStart()}, false);
         this.elem.quit.addEventListener(clickEventType,
-            this.clickQuit.bind(this), false);
+            () => {this.clickQuit()}, false);
         this.elem.canvas.addEventListener(clickEventType,
             (e) => {this.clickCanvas(this.elem.canvas, context, e)}, false);
         this.elem.slider.addEventListener("input",
-            this.sliderChanged.bind(this), false);
+            () => {this.sliderChanged()}, false);
         this.elem.lang.addEventListener("change",
-            this.toggleLang.bind(this), false);
+            () => {this.toggleLang()}, false);
 
         // process in reload of browser
         // restore parameters if data is saved in localStorage
@@ -60,7 +60,7 @@ class SimLocalAnesthesia {
 
         this.lang = this.getStorageLang();
         this.elem.lang.la[this.lang].checked = true;
-        this.setLang(this.lang);
+        this.setLang();
 
         // change buttons status
         this.toggleButton();
@@ -96,23 +96,23 @@ class SimLocalAnesthesia {
             // effects with response
             Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
             Draw.drawCircle(context, ConstVal.CENTERS[site],
-                ConstVal.Rrespond, ConstVal.RrespondCenter, "red");
+                            ConstVal.Rrespond, ConstVal.RrespondCenter, "red");
             this.elem.response.textContent = Labels.with_response[this.lang];
             this.elem.response.style.color = "red";
 
-            setTimeout(function() {
+            setTimeout(() => {
                 Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
                 Draw.drawCircle(context, ConstVal.CENTERS[site],
-                    ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
+                                ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
                 this.elem.response.textContent = "";
-            }.bind(this), 300);
+            }, 300);
         } else {
             // effects without response
             this.elem.response.textContent = Labels.without_response[this.lang];
             this.elem.response.style.color = "black";
-            setTimeout(function() {
+            setTimeout(() =>  {
                 this.elem.response.textContent = "";
-            }.bind(this), 300);
+            }, 300);
         }
     }
 
@@ -122,11 +122,11 @@ class SimLocalAnesthesia {
     // redraw buttons in each language
     toggleLang() {
         this.lang = this.elem.lang.elements.la.value;
-        this.setLang(this.lang)
+        this.setLang()
         this.setStorageLang()
     }
 
-    setLang(lang) {
+    setLang() {
         // start/restart/pause button
         let lab;
         if (this.time.isRunning()) {
@@ -138,9 +138,9 @@ class SimLocalAnesthesia {
                 lab = Labels.restart;
             }
         }
-        this.elem.start.textContent = lab[lang];
-        this.elem.newexp.textContent = Labels.newexp[lang];
-        this.elem.quit.textContent = Labels.quit[lang];
+        this.elem.start.textContent = lab[this.lang];
+        this.elem.newexp.textContent = Labels.newexp[this.lang];
+        this.elem.quit.textContent = Labels.quit[this.lang];
         this.toggleButton();
 
         // slider
@@ -157,14 +157,14 @@ class SimLocalAnesthesia {
             this.param.setInitParameter();
             slider.value = 1;
             this.setStorageSpeed();
-            this.setLang(this.lang)
+            this.setLang()
         }
     }
 
     // push start/restart/pause button
     clickStart() {
         this.time.clickStart();
-        this.setLang(this.lang)
+        this.setLang()
         this.toggleButton();
         this.setStorageSpeed();
     }
@@ -249,8 +249,8 @@ class SimLocalAnesthesia {
     //   radius:
     // Return: true/false
     isInCircle(position, center, radius) {
-        var l2 = Math.pow(position[0] - center[0], 2) +
-            Math.pow(position[1] - center[1], 2);
+        const l2 = Math.pow(position[0] - center[0], 2) +
+                   Math.pow(position[1] - center[1], 2);
         return l2 <= Math.pow(radius, 2);
     }
 
@@ -262,7 +262,7 @@ class SimLocalAnesthesia {
     // Return: circle number
     //   (return -1 when coordinate is out of circles)
     getCircleNumber(position, centers, radius) {
-        var result = -1;
+        let result = -1;
         for (let i = 0; i < centers.length; i++) {
             if (this.isInCircle(position, centers[i], radius)) {
                 result = i
@@ -278,7 +278,7 @@ class SimLocalAnesthesia {
     //   param[mu, sigma, adr]
     // Return: probability (0-1)
     getProbability(time, param) {
-        var X = 100 - (1 - param[2]) * time;
+        let X = 100 - (1 - param[2]) * time;
         return MyStat.phi_approx_upper((X - param[0]) / param[1])
     }
 
@@ -313,7 +313,7 @@ class SimLocalAnesthesia {
     // display timer
     displayTimer() {
         this.elem.timer.textContent = this.time.getTimeStr(slider.value);
-        requestAnimationFrame(this.displayTimer.bind(this));
+        requestAnimationFrame(() => {this.displayTimer()});
     }
 
     //////////////////////////////////
@@ -340,7 +340,7 @@ class SimLocalAnesthesia {
     // get data in localStorage (lang)
     getStorageLang() {
         const lang = localStorage.getItem(ConstVal.storageNameLang);
-        return lang ? lang: 0
+        return lang ? lang : 0
     }
 
     // delete data in localStorage
