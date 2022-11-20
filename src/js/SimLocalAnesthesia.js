@@ -100,19 +100,19 @@ class SimLocalAnesthesia {
             this.elem.response.textContent = Labels.with_response[this.lang];
             this.elem.response.style.color = "red";
 
-            setTimeout(function() {
+            setTimeout(() => {
                 Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
                 Draw.drawCircle(context, ConstVal.CENTERS[site],
                                 ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
                 this.elem.response.textContent = "";
-            }.bind(this), 300);
+            }, 300);
         } else {
             // effects without response
             this.elem.response.textContent = Labels.without_response[this.lang];
             this.elem.response.style.color = "black";
-            setTimeout(function() {
+            setTimeout(() =>  {
                 this.elem.response.textContent = "";
-            }.bind(this), 300);
+            }, 300);
         }
     }
 
