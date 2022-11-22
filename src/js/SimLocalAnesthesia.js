@@ -82,14 +82,14 @@ class SimLocalAnesthesia {
     // mousedown in canvas area
     //////////////////////////////////
     clickCanvas(canvas, context, e) {
-        if (!this.time.isRunning()) { return }
+        if (!this.time.isRunning) { return }
         // running
         const pos = this.getClickedPosition(canvas, e);
         const site = this.getCircleNumber(pos, ConstVal.CENTERS, ConstVal.Rnormal);
 
         if (site < 0) { return }
         // when clicked in circles
-        const isResponse = this.getResponse(site, this.time.getMinute(),
+        const isResponse = this.getResponse(site, this.time.getMinute,
                                             this.param.getParameter());
 
         if (isResponse) {
@@ -129,10 +129,10 @@ class SimLocalAnesthesia {
     setLang() {
         // start/restart/pause button
         let lab;
-        if (this.time.isRunning()) {
+        if (this.time.isRunning) {
             lab = Labels.pause;
         } else {
-            if (this.time.getTotalTime() == 0) {
+            if (this.time.getTotalTime == 0) {
                 lab = Labels.start;
             } else {
                 lab = Labels.restart;
@@ -149,7 +149,7 @@ class SimLocalAnesthesia {
 
     // push new experiment button
     clickNewExp() {
-        if (this.time.isRunning()) { return }
+        if (this.time.isRunning) { return }
         // in pause
         const check = window.confirm(Labels.msg_newexp[this.lang]);
         if (check) {
@@ -171,7 +171,7 @@ class SimLocalAnesthesia {
 
     // push quit button
     clickQuit() {
-        if (this.time.isRunning()) { return }
+        if (this.time.isRunning) { return }
         // in pause
         const check = window.confirm(Labels.msg_quit[this.lang]);
         if (check) {
@@ -183,7 +183,7 @@ class SimLocalAnesthesia {
     }
 
     toggleButton() {
-        if (this.time.isRunning()) {
+        if (this.time.isRunning) {
             this.elem.newexp.style.color = "gray";
             this.elem.quit.style.color = "gray";
         } else {
