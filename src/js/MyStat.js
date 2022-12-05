@@ -22,13 +22,14 @@ class MyStat {
     }
 
     // Random generation according to standard normal distribution
-    // https://stabucky.com/wp/archives/9263
+    // Box-Muller transform
+    // https://qiita.com/kyonsi/items/579a61edab661f27e3a5
     static random_norm(mu = 0, sd = 1) {
-        let s = 0;
-        for (let i = 0; i < 12; i++) {
-            s += Math.random();
-        }
-        return (s - 6) * sd + mu;
+        let x = Math.random();
+        let y = Math.random();
+        let z1 = Math.sqrt(-2 * Math.log(x)) * Math.cos(2 * Math.PI  * y);
+        // let z2 = Math.sqrt(-2 * Math.log(x)) * Math.sin(2 * Math.PI  * y);
+        return mu + z1 * sd;
     }
 }
 
