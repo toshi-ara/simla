@@ -1,0 +1,6 @@
+{
+    "short_name": "SimLA",
+    "name": "Local Anesthesia Simulation",
+    "display": "standalone",
+    "start_url": "index.html"
+}
