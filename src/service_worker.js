@@ -1,8 +1,6 @@
-// https://qiita.com/poster-keisuke/items/6651140fa20c7aa18474
-
-let CACHE_NAME = 'pwa-sample-caches';
-let urlsToCache = [
-    '/toshi-ara.github.io/simla/src/',
+var CACHE_NAME = 'simla-caches';
+var urlsToCache = [
+    '/toshi-ara.github.io/simla/src/index.html',
 ];
 
 self.addEventListener('install', function(event) {
