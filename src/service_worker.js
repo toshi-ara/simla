@@ -1,5 +1,5 @@
-var CACHE_NAME = 'simla-caches';
-var urlsToCache = [
+const CACHE_NAME = 'simla-caches';
+const urlsToCache = [
     'index.html',
     '/js/ConstVal.js',
     '/js/Draw.js',
@@ -13,17 +13,18 @@ var urlsToCache = [
     '/css/style.css'
 ];
 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', event => {
     event.waitUntil(
         caches
             .open(CACHE_NAME)
-            .then(function(cache) {
-                return cache.addAll(urlsToCache.map(url => new Request(url, {credentials: 'same-origin'})));
+            .then(cache => {
+                return cache.addAll(urlsToCache.map);
+                // return cache.addAll(urlsToCache.map(url => new Request(url, {credentials: 'same-origin'})));
             })
     );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', event =>  {
     event.respondWith(
         caches
             .match(event.request)
