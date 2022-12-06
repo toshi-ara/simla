@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>局所麻酔薬シミュレーター</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/ConstVal.js"></script>
     <script src="js/Labels.js"></script>
@@ -35,5 +36,15 @@
         <canvas id="canvas"  width="481" height="268"></canvas>
     </div>
     <div id="response"></div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service_worker.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch(function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        }
+    </script>
 </body>
 
