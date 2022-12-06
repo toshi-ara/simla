@@ -1,16 +1,6 @@
 const cacheName = 'simla-caches';
 const cacheFiles = [
-    'index.html',
-    '/js/ConstVal.js',
-    '/js/Draw.js',
-    '/js/Labels.js',
-    '/js/MyStat.js',
-    '/js/Parameter.js',
-    '/js/SimLocalAnesthesia.js',
-    '/js/Timer.js',
-    '/js/main.js',
-    '/fig/fig_back.png',
-    '/css/style.css'
+    'index.html'
 ];
 
 
