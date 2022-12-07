@@ -78,6 +78,10 @@ class Timer {
     // push quit button
     clickQuit() {
         if (!this.isRunning) {
+            this._isRunning = false;
+            this._start = Date.now();
+            this._elapsed = 0;
+            this._total = 0;
             this.clearStorage();
         }
     }
