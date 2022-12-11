@@ -20,6 +20,8 @@ html {
 #canvas {
     width: auto;
     height: auto;
+    background-image: url(../fig/fig_back.png);
+    background-repeat: no-repeat;
 }
 #response {
     font-size: 48px;

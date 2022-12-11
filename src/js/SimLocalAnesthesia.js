@@ -24,15 +24,12 @@ class SimLocalAnesthesia {
         const context = this.elem.canvas.getContext("2d");
         const img = new Image();
         img.src = ConstVal.path_to_fig;
-        img.onload = () => {
-            // display image
-            context.drawImage(img, 0, 0);
-            // draw circles
-            ConstVal.CENTERS.forEach(function(center) {
-                Draw.drawCircle(context, center,
-                                ConstVal.Rnormal, ConstVal.RnormalCenter, "black")
-            });
-        };
+
+        // draw circles
+        ConstVal.CENTERS.forEach(function(center) {
+            Draw.drawCircle(context, center,
+                            ConstVal.Rnormal, ConstVal.RnormalCenter, "black")
+        });
 
         // PC or tablet
         const clickEventType = (window.ontouchstart === undefined) ? "mousedown" : "touchstart";
