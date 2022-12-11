@@ -7,7 +7,6 @@ class ConstVal {
     static D_MU0 = [0, 4];
 
     // image
-    static path_to_fig = "./fig/fig_back.png";
     static CENTERS = [[218, 100], [289, 100], [360, 100],
                       [218, 150], [289, 150], [360, 150]];
     static Rnormal = 20;
