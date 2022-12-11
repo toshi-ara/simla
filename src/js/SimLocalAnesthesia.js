@@ -23,7 +23,6 @@ class SimLocalAnesthesia {
         // set canvas
         const context = this.elem.canvas.getContext("2d");
         const img = new Image();
-        img.src = ConstVal.path_to_fig;
 
         // draw circles
         ConstVal.CENTERS.forEach(function(center) {
