@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>局所麻酔薬シミュレーター</title>
-    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="images/favicon.ico" id="favicon">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/ConstVal.js"></script>
     <script src="js/Labels.js"></script>
@@ -14,27 +14,42 @@
     <script src="js/SimLocalAnesthesia.js"></script>
     <script src="js/main.js"></script>
 </head>
+
 <body>
-    <form id="lang">
-        <input type="radio" name="la" value=0> 日本語 (Japanese)
-        <input type="radio" name="la" value=1> English
-    </form>
-
-    <div id="buttons">
-        <button id="newexp"></button>
-        <button id="start"></button>
-        <button id="quit"></button>
+    <div id="version">
+        Simulator of Local Anesthesia version 0.6.2.9000
     </div>
 
-    <div>
-        <input id="slider" type="range" min="1" max="10" value="1">
-        <div id="speed_msg"></div>
+    <div class="forPortrait">
+        画面を横向きにして下さい <BR>
+        <BR>
+        Please change screen to landscape (horizontal)
     </div>
-    <div id="timer"></div>
 
-    <div>
-        <canvas id="canvas"  width="481" height="268"></canvas>
+    <div class="forLandscape">
+        <div id="left">
+            <form id="lang">
+                <input type="radio" name="la" value=0> 日本語 (Japanese)
+                <input type="radio" name="la" value=1> English
+            </form>
+
+            <div id="buttons">
+                <label><button id="newexp"></button></label>
+                <label><button id="start"></button></label>
+                <label><button id="quit"></button></label>
+            </div>
+
+            <div id="timer"></div>
+            <div id="response"></div>
+        </div>
+
+        <div id="right">
+            <div>
+                <input id="slider" type="range" min="1" max="10" value="1">
+                <div id="speed_msg"></div>
+            </div>
+            <div><canvas id="canvas" width="481" height="268"></canvas></div>
+        </div>
     </div>
-    <div id="response"></div>
 </body>
 

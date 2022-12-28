@@ -1,45 +1,99 @@
+@media screen and (orientation: landscape){
+    div.forPortrait {
+        display: none;
+    }
+    div.forLandscape {
+        display: flex;
+    }
+}
+
+@media screen and (orientation: portrait){
+    div.forLandscape {
+        display: none;
+    }
+    div.forPortrait {
+        font-size: 60px;
+        color: #00008B;
+        margin: 200px 20px;
+    }
+}
+
 html {
     text-align: center;
     font-family: sans-serif;
     background: mintcream;
+}
+
+#left {
     margin-left: auto;
+}
+#right {
     margin-right: auto;
 }
+
+#lang {
+    font-size: 21px;
+    padding: 5px;
+    margin-top: 10px;
+}
+#lang > label {
+    display: block;
+    padding: 5px;
+}
+
 #buttons {
-    padding: 10px;
-    padding-bottom: 30px;
+    padding: 5px;
 }
-#slider {
-    width: 300px;
+#buttons > label {
+    display: block;
 }
+
 #timer {
     font-family: monospace;
     font-size: 60px;
-    padding: 20px;
+    margin: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
+
+#slider {
+    margin-top: 10px;
+    width: 300px;
+}
+
 #canvas {
-    width: auto;
-    height: auto;
-    background-image: url(../fig/fig_back.png);
+    background-image: url(../images/fig_back.svg);
     background-repeat: no-repeat;
+    background-size:contain;
+    width: 481px;
+    height: 268px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
+
 #response {
     font-size: 48px;
-    padding: 20px;
+}
+
+#version {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: gray;
 }
 
 
 button {
-    width: 120px;
+    width: 250px;
     height: 40px;
     font-size: 20px;
     border-radius: 10px;
     border: 2px #808080 solid;
-    padding: 5px;
     cursor: pointer;
+    margin: 3px;
 }
 #start {
-    width: 200px;
+    height: 60px;
     background-color: cyan;
 }
-
